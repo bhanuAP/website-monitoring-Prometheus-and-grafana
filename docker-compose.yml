@@ -1,8 +1,5 @@
 version: "2"
 
-networks:
-  net:
-
 services:
   prometheus:
     image: prom/prometheus:latest
@@ -15,13 +12,11 @@ services:
     ports:
       - 9090:9090
 
-    networks:
-      - net
-
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     hostname: grafana
+    restart: always
     environment:
       - GF_AUTH_PROXY_ENABLED=true
       - GF_PATHS_PROVISIONING=/var/lib/grafana/provisioning/
@@ -29,8 +24,15 @@ services:
       - ./provisioning/:/var/lib/grafana/provisioning/
     ports:
       - 3000:3000
-    networks:
-      - net
     depends_on:
       - prometheus
 
+  blackbox:
+    image: bitnami/blackbox-exporter:latest
+    container_name: blackbox
+    hostname: blackbox
+    restart: always
+    ports:
+      - 9115:9115
+    depends_on:
+      - prometheus
