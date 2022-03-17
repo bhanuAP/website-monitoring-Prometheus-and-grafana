@@ -32,6 +32,8 @@ services:
     container_name: blackbox
     hostname: blackbox
     restart: always
+    volumes:
+      - ./blackbox.yml/:/opt/bitnami/blackbox-exporter/blackbox.yml
     ports:
       - 9115:9115
     depends_on:
